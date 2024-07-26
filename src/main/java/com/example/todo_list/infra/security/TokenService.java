@@ -31,6 +31,19 @@ public class TokenService {
         }
     }
 
+    public String validationToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                .withIssuer("todo_list-api")
+                .build()
+                .verify(token)
+                .getSubject();
+        } catch (Exception e){
+            throw new RuntimeException("Error while validate token", e);
+        }
+    }
+
     public Instant generationTime() {
         return LocalDateTime.now().plusHours(3).toInstant(ZoneOffset.of("-03:00"));
     }
