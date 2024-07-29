@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.todo_list.domain.task.Task;
 
 public interface TaskRepository extends JpaRepository<Task, String> {
-    List<Task> findByUserId(String userid);
+    List<Task> findAllByUserId(String userid);
 }

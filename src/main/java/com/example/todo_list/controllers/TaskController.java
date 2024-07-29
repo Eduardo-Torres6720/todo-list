@@ -9,8 +9,11 @@ import com.example.todo_list.services.TaskService;
 
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,10 +26,16 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @PostMapping("/user/{userid}")
-    public ResponseEntity<Task> postMethodName(@PathVariable String userid, @RequestBody @Valid TaskDTO data) {
+    @PostMapping("/user/{userid}/addTask")
+    public ResponseEntity<Task> postTask(@PathVariable String userid, @RequestBody @Valid TaskDTO data) {
         Task newTask = taskService.addTask(userid, data);
         return ResponseEntity.ok(newTask);
+    }
+
+    @GetMapping("/user/{userid}")
+    public ResponseEntity<List<Task>> getTasks(@PathVariable String userid) {
+        List<Task> tasks = taskService.showTasksForUserid(userid);
+        return ResponseEntity.ok(tasks);
     }
     
 }
