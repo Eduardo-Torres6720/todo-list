@@ -44,4 +44,9 @@ public class TaskService {
         return updatedTask;
     }
 
+    public void completedTask(String id) {
+        Task taskCompleted = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("task not found"));
+
+        taskCompleted.setCompleted(!taskCompleted.getCompleted());
+    }
 }

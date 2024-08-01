@@ -48,4 +48,16 @@ public class TaskController {
         
         return ResponseEntity.ok(task);
     }
+    
+    @PutMapping("/completeTask/{taskid}")
+    @Transactional
+    public ResponseEntity<String> completeTask(@PathVariable String taskid) {
+        try {
+            taskService.completedTask(taskid);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            throw new RuntimeException("not found", e);
+        }
+
+    }
 }
