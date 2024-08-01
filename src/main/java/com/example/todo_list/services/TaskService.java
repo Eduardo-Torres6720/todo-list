@@ -1,7 +1,6 @@
 package com.example.todo_list.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,4 +32,16 @@ public class TaskService {
 
         return userTasks;
     }
+
+    public Task updateTask(String id, TaskDTO data) {
+        Task updatedTask = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("task not found"));
+
+        if (data.description() != null) {
+            updatedTask.setDescription(data.description());
+        }
+        updatedTask.setTitle(data.title());
+
+        return updatedTask;
+    }
+
 }
