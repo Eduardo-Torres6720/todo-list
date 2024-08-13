@@ -34,23 +34,32 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) {
-        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-        Authentication auth = this.authenticationManager.authenticate(usernamePassword);
+        try {
+            UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+            Authentication auth = this.authenticationManager.authenticate(usernamePassword);
+            String token = tokenService.generationToken((User) auth.getPrincipal());
+    
+            return ResponseEntity.ok(new LoginResponseDTO(token));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
 
-        String token = tokenService.generationToken((User) auth.getPrincipal());
-
-        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Valid AuthenticationDTO data) {
-        if (repository.findByLogin(data.login()) != null) {return ResponseEntity.badRequest().build();}
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User newUser = new User(data.login(), encryptedPassword);
-
-        repository.save(newUser);
-        
-        return ResponseEntity.ok().build();
+    public ResponseEntity<LoginResponseDTO> register(@RequestBody @Valid AuthenticationDTO data) {
+        try {
+            if (repository.findByLogin(data.login()) != null) {return ResponseEntity.badRequest().build();}
+            
+            String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+            User newUser = new User(data.login(), encryptedPassword);
+            String token = tokenService.generationToken((User) newUser);
+            
+            repository.save(newUser);
+            
+            return ResponseEntity.ok(new LoginResponseDTO(token));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
