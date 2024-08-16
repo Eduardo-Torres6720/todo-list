@@ -38,8 +38,10 @@ public class AuthenticationController {
             UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
             Authentication auth = this.authenticationManager.authenticate(usernamePassword);
             String token = tokenService.generationToken((User) auth.getPrincipal());
+
+            User user = repository.findByLogin(data.login());
     
-            return ResponseEntity.ok(new LoginResponseDTO(token));
+            return ResponseEntity.ok(new LoginResponseDTO(token, user.getId()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -57,7 +59,7 @@ public class AuthenticationController {
             
             repository.save(newUser);
             
-            return ResponseEntity.ok(new LoginResponseDTO(token));
+            return ResponseEntity.ok(new LoginResponseDTO(token, newUser.getId()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
