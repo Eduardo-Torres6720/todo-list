@@ -28,7 +28,7 @@ public class TaskService {
     }
 
     public List<Task> showTasksForUserid(String userid) {
-        List<Task> userTasks = taskRepository.findAllByUserId(userid);
+        List<Task> userTasks = taskRepository.findAllByUserIdAndActive(userid, true);
 
         return userTasks;
     }
@@ -48,5 +48,11 @@ public class TaskService {
         Task taskCompleted = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("task not found"));
 
         taskCompleted.setCompleted(!taskCompleted.getCompleted());
+    }
+
+    public void deleteTask(String id) {
+        Task taskDeleted = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("task not found"));
+
+        taskDeleted.setActive(!taskDeleted.getActive());
     }
 }

@@ -14,6 +14,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,5 +60,16 @@ public class TaskController {
             throw new RuntimeException("not found", e);
         }
 
+    }
+
+    @DeleteMapping("/delete/{taskid}")
+    @Transactional
+    public ResponseEntity<String> deleteTask(@PathVariable String taskid) {
+        try {
+            taskService.deleteTask(taskid);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            throw new RuntimeException("not found", e); 
+        }
     }
 }

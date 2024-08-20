@@ -1,6 +1,7 @@
 package com.example.todo_list.domain.task;
 
 import com.example.todo_list.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ public class Task {
 
     private Boolean completed;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "userid")
     private User user;
