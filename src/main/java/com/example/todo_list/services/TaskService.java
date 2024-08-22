@@ -55,4 +55,10 @@ public class TaskService {
 
         taskDeleted.setActive(!taskDeleted.getActive());
     }
+
+    public List<Task> getDeletedTasks(String userId) {
+        List<Task> deletedTasks = taskRepository.findAllByUserIdAndActive(userId, false);
+
+        return deletedTasks;
+    }
 }

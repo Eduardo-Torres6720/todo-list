@@ -72,4 +72,11 @@ public class TaskController {
             throw new RuntimeException("not found", e); 
         }
     }
+
+    @GetMapping("/deletedTask/user/{userid}")
+    public ResponseEntity<List<Task>> getDeletedTasks(@PathVariable String userid) {
+        List<Task> deletedTask = taskService.getDeletedTasks(userid);
+
+        return ResponseEntity.ok().body(deletedTask);
+    }
 }
