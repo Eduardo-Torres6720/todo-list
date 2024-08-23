@@ -61,4 +61,10 @@ public class TaskService {
 
         return deletedTasks;
     }
+
+    public void taskRescue(String taskId) {
+        Task activeTask = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("task not found"));
+
+        activeTask.setActive(true);
+    }
 }

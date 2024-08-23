@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.todo_list.domain.task.Task;
+import com.example.todo_list.domain.task.TaskActiveDTO;
 import com.example.todo_list.domain.task.TaskDTO;
 import com.example.todo_list.services.TaskService;
 
@@ -78,5 +79,15 @@ public class TaskController {
         List<Task> deletedTask = taskService.getDeletedTasks(userid);
 
         return ResponseEntity.ok().body(deletedTask);
+    }
+
+    @PutMapping("/activeTask")
+    @Transactional
+    public ResponseEntity<String> TaskRescue(@RequestBody List<TaskActiveDTO> id) {
+        for (int i = 0; i < id.size(); i++) {
+            taskService.taskRescue(id.get(i).id());
+        }
+
+        return ResponseEntity.ok().build();
     }
 }
