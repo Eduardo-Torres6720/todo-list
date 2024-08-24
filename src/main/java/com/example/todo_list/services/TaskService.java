@@ -52,8 +52,11 @@ public class TaskService {
 
     public void deleteTask(String id) {
         Task taskDeleted = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("task not found"));
-
-        taskDeleted.setActive(!taskDeleted.getActive());
+        if (taskDeleted.getActive()) {
+            taskDeleted.setActive(!taskDeleted.getActive());
+        } else {
+            taskRepository.delete(taskDeleted);
+        }
     }
 
     public List<Task> getDeletedTasks(String userId) {
