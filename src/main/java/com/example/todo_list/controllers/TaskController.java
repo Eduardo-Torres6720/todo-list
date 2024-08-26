@@ -51,9 +51,9 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
     
-    @PutMapping("/completeTask/{taskid}")
+    @PutMapping("/completeTask")
     @Transactional
-    public ResponseEntity<String> completeTask(@PathVariable String taskid) {
+    public ResponseEntity<String> completeTask(@RequestBody @Valid String taskid) {
         try {
             taskService.completedTask(taskid);
             return ResponseEntity.ok().build();
