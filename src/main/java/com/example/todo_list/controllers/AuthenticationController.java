@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.todo_list.domain.user.AuthenticationDTO;
 import com.example.todo_list.domain.user.LoginResponseDTO;
 import com.example.todo_list.domain.user.User;
+import com.example.todo_list.exceptions.ExistingEmailException;
+import com.example.todo_list.exceptions.LoginPasswordIncorrectException;
+import com.example.todo_list.exceptions.UserNotFoundException;
 import com.example.todo_list.infra.security.TokenService;
 import com.example.todo_list.repositories.UserRepository;
 
@@ -43,25 +46,23 @@ public class AuthenticationController {
     
             return ResponseEntity.ok(new LoginResponseDTO(token, user.getId()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            throw new LoginPasswordIncorrectException();
         }
 
     }
 
     @PostMapping("/register")
     public ResponseEntity<LoginResponseDTO> register(@RequestBody @Valid AuthenticationDTO data) {
-        try {
-            if (repository.findByLogin(data.login()) != null) {return ResponseEntity.badRequest().build();}
-            
-            String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-            User newUser = new User(data.login(), encryptedPassword);
-            String token = tokenService.generationToken((User) newUser);
-            
-            repository.save(newUser);
-            
-            return ResponseEntity.ok(new LoginResponseDTO(token, newUser.getId()));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+
+        if (repository.findByLogin(data.login()) != null) {throw new ExistingEmailException();}
+        
+        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+        User newUser = new User(data.login(), encryptedPassword);
+        String token = tokenService.generationToken((User) newUser);
+        
+        repository.save(newUser);
+        
+        return ResponseEntity.ok(new LoginResponseDTO(token, newUser.getId()));
+        
     }
 }
